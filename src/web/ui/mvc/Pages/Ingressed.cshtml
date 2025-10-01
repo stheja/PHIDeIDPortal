@@ -1,0 +1,45 @@
+@page
+@model PHIDeIDPortal.Pages.IngressedModel
+@{
+    ViewData["Title"] = "Ingressed Files";
+}
+
+<h1>Ingressed Files</h1>
+<p>Files you have uploaded.</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>File Name</th>
+            <th>Uploaded (UTC)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @if (Model.Results.Count == 0)
+    {
+        <tr><td colspan="3" class="text-center">No files yet.</td></tr>
+    }
+    else
+    {
+        foreach (var r in Model.Results)
+        {
+            <tr>
+                <td>@r.FileName</td>
+                <td>@r.UploadTimestamp.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                <td><a href="/api/ingress/download?id=@r.Id">Download</a></td>
+            </tr>
+        }
+    }
+    </tbody>
+    @if (!string.IsNullOrEmpty(Model.NextContinuationToken))
+    {
+        <tfoot>
+            <tr>
+                <td colspan="3" class="text-center">
+                    <a class="btn btn-primary" href="@Url.Page("/Ingressed", new { continuationToken = Model.NextContinuationToken })">Load more</a>
+                </td>
+            </tr>
+        </tfoot>
+    }
+</table>
